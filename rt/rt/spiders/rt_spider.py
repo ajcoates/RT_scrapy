@@ -1,4 +1,4 @@
-from scrapy import Spider
+from scrapy import Spider,
 from rt_items import scrapy.cfg
 import re
 import math
@@ -19,7 +19,7 @@ class RTSpider(Spider):
         text = response.xpath('https://www.rottentomatoes.com').extract_first()
         number_pages = 100
         ##### List comprehension to construct all the urls
-        result_urls = ['https://www.bestbuy.com/site/all-laptops/pc-laptops/pcmcat247400050000.c?cp={}&id=pcmcat247400050000'.format(x) for x in range(1,number_pages+1)]
+        result_urls = ['https://www.rottentomatoes.com'.format(x) for x in range(1,number_pages+1)]
 
     def parse_movie(self, response):
         # Assume our xpaths only work on our target page
