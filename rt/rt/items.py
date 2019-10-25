@@ -10,7 +10,10 @@ import scrapy
 
 class RtItem(scrapy.Item):
     film = scrapy.Field()
-    rank = scrapy.Field()
-    num_reviews = scrapy.Field()
+    criticscore = scrapy.Field()
+    audiencescore = scrapy.Field()
+    runtime = scrapy.Field()
+    boxoffice = scrapy.Field()
+    rating = scrapy.Field()
     
     pass
