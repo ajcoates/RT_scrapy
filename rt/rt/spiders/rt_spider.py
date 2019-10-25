@@ -1,5 +1,5 @@
-from scrapy import Spider,
-from rt_items import scrapy.cfg
+from scrapy import Spider, Request
+from Rt_Items import scrapy.cfg
 import re
 import math
 
@@ -27,7 +27,7 @@ class RTSpider(Spider):
             title = response.xpath('//div[@id="content"]//h2/text()').extract()
             page  = response.xpath('//span[@class="pageInfo"]/text()').extract()[0]
         except:
-            print  print "Error in URL: %s" % response.url
+            print "Error in URL: %s" % response.url
             return
 
 
