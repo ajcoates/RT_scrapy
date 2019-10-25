@@ -35,8 +35,8 @@ class RTSpider(Spider):
         ##### THIS FINDS THE ITEMS DESCRIBED IN ITEMS.PY
         #####
 
-        criticscore = response.xpath('').extract()
-        audiencescore = response.xpath('').extract()
-        runtime = response.xpath('').extract()
-        boxoffice = response.xpath('').extract()
-        rating = response.xpath('').extract()
+        criticscore = response.xpath('//*[@id="tomato_meter_link"]/span[2]').extract()
+        audiencescore = response.xpath('//*[@id="topSection"]/div[2]/div[1]/section/section/div[2]/h2/a/span[2]').extract()
+        rating = response.xpath('//*[@id="mainColumn"]/section[4]/div/div/ul/li[1]/div[2]').extract()
+        boxoffice = response.xpath('//*[@id="mainColumn"]/section[4]/div/div/ul/li[7]/div[2]').extract()
+        runtime = response.xpath('//*[@id="mainColumn"]/section[4]/div/div/ul/li[8]/div[2]/time').extract()
