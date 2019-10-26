@@ -20,23 +20,23 @@ class MovieInfo:
 class RTSpider(Spider):
     name = 'rt_spider'
     allowed_domains = ['https://www.rottentomatoes.com']
-    start_urls = ["/top/bestofrt/top_100_action__adventure_movies/",
-                  "/top/bestofrt/top_100_animation_movies/",
-                  "/top/bestofrt/top_100_art_house__international_movies/",
-                  "/top/bestofrt/top_100_classics_movies/",
-                  "/top/bestofrt/top_100_comedy_movies/",
-                  "/top/bestofrt/top_100_documentary_movies/",
-                  "/top/bestofrt/top_100_drama_movies/",
-                  "/top/bestofrt/top_100_horror_movies/",
-                  "/top/bestofrt/top_100_kids__family_movies/",
-                  "/top/bestofrt/top_100_musical__performing_arts_movies/",
-                  "/top/bestofrt/top_100_mystery__suspense_movies/",
-                  "/top/bestofrt/top_100_romance_movies/",
-                  "/top/bestofrt/top_100_science_fiction__fantasy_movies/",
-                  "/top/bestofrt/top_100_special_interest_movies/",
-                  "/top/bestofrt/top_100_sports__fitness_movies/",
-                  "/top/bestofrt/top_100_television_movies/",
-                  "/top/bestofrt/top_100_western_movies/"]
+    start_urls = ["https://www.rottentomatoes.com/top/bestofrt/top_100_action__adventure_movies/",
+                  "https://www.rottentomatoes.com/top/bestofrt/top_100_animation_movies/",
+                  "https://www.rottentomatoes.com/top/bestofrt/top_100_art_house__international_movies/",
+                  "https://www.rottentomatoes.com/top/bestofrt/top_100_classics_movies/",
+                  "https://www.rottentomatoes.com/top/bestofrt/top_100_comedy_movies/",
+                  "https://www.rottentomatoes.com/top/bestofrt/top_100_documentary_movies/",
+                  "https://www.rottentomatoes.com/top/bestofrt/top_100_drama_movies/",
+                  "https://www.rottentomatoes.com/top/bestofrt/top_100_horror_movies/",
+                  "https://www.rottentomatoes.com/top/bestofrt/top_100_kids__family_movies/",
+                  "https://www.rottentomatoes.com/top/bestofrt/top_100_musical__performing_arts_movies/",
+                  "https://www.rottentomatoes.com/top/bestofrt/top_100_mystery__suspense_movies/",
+                  "https://www.rottentomatoes.com/top/bestofrt/top_100_romance_movies/",
+                  "https://www.rottentomatoes.com/top/bestofrt/top_100_science_fiction__fantasy_movies/",
+                  "https://www.rottentomatoes.com/top/bestofrt/top_100_special_interest_movies/",
+                  "https://www.rottentomatoes.com/top/bestofrt/top_100_sports__fitness_movies/",
+                  "https://www.rottentomatoes.com/top/bestofrt/top_100_television_movies/",
+                  "https://www.rottentomatoes.com/top/bestofrt/top_100_western_movies/"]
 
     def parse_movie(self, response):
         # Assume our xpaths only work on our target page
