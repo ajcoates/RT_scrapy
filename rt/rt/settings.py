@@ -59,11 +59,11 @@ DOWNLOAD_DELAY = 1.76
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
 #EXTENSIONS = {
-#    'scrapy.extensions.telnet.TelnetConsole': None,
+#    'scrapy.extensions.telnet.TelnetConsole': Non
 #}
 
-Configure item pipeline
-See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
+# Configure item pipeline
+# See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'rt.pipelines.RtPipeline': 300,
 }

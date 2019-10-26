@@ -38,16 +38,8 @@ class RTSpider(Spider):
                   "https://www.rottentomatoes.com/top/bestofrt/top_100_television_movies/",
                   "https://www.rottentomatoes.com/top/bestofrt/top_100_western_movies/"]
 
-    def parse_movie(self, response):
-        # Assume our xpaths only work on our target page
-        try:
-            title = response.xpath('//div[@id="content"]//h2/text()').extract()
-            page  = response.xpath('//span[@class="pageInfo"]/text()').extract()[0]
-        except:
-            print ("Error in URL: %s" % response.url)
-            return
+    def parse(self, response):
 
-        print ('Title: %s , %s' % (title, page))
         movie_info = set()
 
         for item in response.xpath('//*[@id="mainColumn"]/section[4]/div/h2'):
