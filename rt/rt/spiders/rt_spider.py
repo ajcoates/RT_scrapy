@@ -1,6 +1,9 @@
-from scrapy import Spider 
+from scrapy import Spider, Selector
+import requests
+import random
 import re
 import math
+import time
 
 ######DUMMY SPIDER
 ######SPIDER STARTS AT TOP_100_ACTION PAGE
@@ -9,8 +12,7 @@ import math
 
 class MovieInfo:
     rate = 1
-    def __init__(self, title, criticscore, audiencescore, rating, boxoffice, runtime):
-        self.title = title
+    def __init__(self, criticscore, audiencescore, rating, boxoffice, runtime):
         self.criticscore = criticscore
         self.audiencescore = audiencescore
         self.rating = rating
@@ -39,23 +41,44 @@ class RTSpider(Spider):
                   "https://www.rottentomatoes.com/top/bestofrt/top_100_western_movies/"]
 
     def parse(self, response):
-
-        movie_info = set()
-
-        for item in response.xpath('//*[@id="mainColumn"]/section[4]/div/h2'):
+        genres = response.xpath('//*[@id="mainColumn"]/section[4]/div/h2')
+        genre_movies = set()
+        print("you are in parse '{}'".format(genres))
+        time.sleep(100)
+        for item in genres:
             try:
-                criticscore = response.xpath(
-                    '//*[@id="tomato_meter_link"]/span[2]').extract()
-                audiencescore = response.xpath(
-                    '//*[@id="topSection"]/div[2]/div[1]/section/section/div[2]/h2/a/span[2]').extract()
-                rating = response.xpath(
-                    '//*[@id="mainColumn"]/section[4]/div/div/ul/li[1]/div[2]').extract()
-                boxoffice = response.xpath(
-                    '//*[@id="mainColumn"]/section[4]/div/div/ul/li[7]/div[2]').extract()
-                runtime = response.xpath(
-                    '//*[@id="mainColumn"]/section[4]/div/div/ul/li[8]/div[2]/time').extract()
-
+           ## collect item and yield item
+                print(item)
             except Error as e:
                 print("Error in URL {}".format(e))
-        m = MovieInfo(title, criticscore, audiencescore, rating, boxoffice, runtime)
-        movie_info.add(m)
+
+    @staticmethod
+    def _get_content(link):
+        """
+        Politely request the page content at link.
+        """
+
+        content = requests.get(link).text
+
+        x = 3 + 2 * random.random()
+        time.sleep(x)
+
+        return content
+
+    def get_movieinfo(self, url):
+        response = None
+        genre_movies = set()
+
+        criticscore = response.xpath(
+            '//*[@id="tomato_meter_link"]/span[2]').extract()
+        audiencescore = response.xpath(
+            '//*[@id="topSection"]/div[2]/div[1]/section/section/div[2]/h2/a/span[2]').extract()
+        rating = response.xpath(
+            '//*[@id="mainColumn"]/section[4]/div/div/ul/li[1]/div[2]').extract()
+        boxoffice = response.xpath(
+            '//*[@id="mainColumn"]/section[4]/div/div/ul/li[7]/div[2]').extract()
+        runtime = response.xpath(
+            '//*[@id="mainColumn"]/section[4]/div/div/ul/li[8]/div[2]/time').extract()
+
+        m = MovieInfo(criticscore, audiencescore, rating, boxoffice, runtime)
+        genre_movies.add(m)
