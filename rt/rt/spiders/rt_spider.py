@@ -87,7 +87,6 @@ class RTSpider(Spider):
             "criticscore": grab_data("criticscore", '//*[@id="tomato_meter_link"]/span[2]/text()'),
             "criticcount": grab_data("critic count", '//small[@class="mop-ratings-wrap__text--small"]/text()'),
             "audiencescore": grab_data("audiencescore", '//*[@id="topSection"]/div[2]/div[1]/section/section/div[2]/h2/a/span[2]/text()'),
-            "audiencevotercount": grab_data("audience score count", '//strong[@class="mop-ratings-wrap__text--small"]/text()'),
             "rating": grab_data("rating", make_xpath("Rating")),
             "boxoffice": grab_data("boxoffice", make_xpath("Box Office"), True),
             "runtime": grab_data("runtime", make_xpath("Runtime")),

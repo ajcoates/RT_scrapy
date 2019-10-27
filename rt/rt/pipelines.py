@@ -28,7 +28,7 @@ class RtPipeline(object):
             print("{} does not exist, creating.".format(self.filename))
 
         writer = csv.writer(open(self.filename, 'a+'))
-        writer.writerow(["title", "criticscore", "criticcount", "audiencescore", "audiencevotercount", "rating", "boxoffice", "runtime"])
+        writer.writerow(["title", "criticscore", "criticcount", "audiencescore", "rating", "boxoffice", "runtime"])
 
         print("Wrote column names to csv.")
 
@@ -51,7 +51,6 @@ class RtPipeline(object):
             item["criticscore"],
             item["criticcount"],
             item["audiencescore"],
-            item["audiencevotercount"],
             item["rating"],
             item["boxoffice"],
             item["runtime"],
