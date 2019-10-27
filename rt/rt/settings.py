@@ -65,7 +65,7 @@ DOWNLOAD_DELAY = 1.76
 # Configure item pipeline
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'rt.pipelines.RtPipeline': 300,
+    'rt.pipelines.RtPipeline': 1,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

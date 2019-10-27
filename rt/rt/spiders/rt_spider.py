@@ -10,14 +10,6 @@ import time
 ######SPIDER ENTERS PAGE OF EACH OF THE 100 ENTRIES
 ######SPIDER SCRAPES THE 6 ITEMS FROM ITEMS.PY
 
-class MovieInfo:
-    rate = 1
-    def __init__(self, criticscore, audiencescore, rating, boxoffice, runtime):
-        self.criticscore = criticscore
-        self.audiencescore = audiencescore
-        self.rating = rating
-        self.boxoffice = boxoffice
-        self.runtime = runtime
 
 class RTSpider(Spider):
     name = 'rt_spider'
@@ -43,13 +35,12 @@ class RTSpider(Spider):
     def parse(self, response):
         top100 = response.xpath('/html/body/div[4]/div[2]/div[1]/section/div/table//@href')
         genre_movies = set()
-        print("selectors '{}'".format(top100))
         for selector in top100:
-            url = 'www.rottentomatoes.com' + selector.extract()
+            url = 'https://www.rottentomatoes.com' + selector.extract()
             try:
            ## collect selector and yield selector
-                test = get_movieinfo(url)
-            except Error as e:
+                yield self.get_movieinfo(url)
+            except Exception as e:
                 print("Error in URL {}".format(e))
 
     @staticmethod
@@ -66,22 +57,18 @@ class RTSpider(Spider):
         return content
 
     def get_movieinfo(self, url):
-        response = None
+        print("getting movie info for '{}'".format(url))
 
-        criticscore = response.xpath(
-            '//*[@id="tomato_meter_link"]/span[2]').extract()
-        print("criticscore: {}".format(criticscore))
-        audiencescore = response.xpath(
-            '//*[@id="topSection"]/div[2]/div[1]/section/section/div[2]/h2/a/span[2]').extract()
-        print("audiencescore: {}".format(audiencescore))
-        rating = response.xpath(
-            '//*[@id="mainColumn"]/section[4]/div/div/ul/li[1]/div[2]').extract()
-        print("rating: {}".format(rating))
-        boxoffice = response.xpath(
-            '//*[@id="mainColumn"]/section[4]/div/div/ul/li[7]/div[2]').extract()
-        print("boxoffice: {}".format(boxoffice))
-        runtime = response.xpath(
-            '//*[@id="mainColumn"]/section[4]/div/div/ul/li[8]/div[2]/time').extract()
-        print("runtime: {}".format(runtime))
+        content = RTSpider._get_content(url);
 
-        return MovieInfo(criticscore, audiencescore, rating, boxoffice, runtime)
+        def grab_data(my_xpath):
+            return Selector(text=content).xpath(my_xpath).extract()[0].strip()
+
+        return {
+            "title": grab_data('//h1[@class="mop-ratings-wrap__title mop-ratings-wrap__title--top"]/text()')
+            "criticscore": grab_data('//*[@id="tomato_meter_link"]/span[2]/text()'),
+            "audiencescore": grab_data('//*[@id="topSection"]/div[2]/div[1]/section/section/div[2]/h2/a/span[2]/text()'),
+            "rating": grab_data('//*[@id="mainColumn"]/section[4]/div/div/ul/li[1]/div[2]/text()'),
+            "boxoffice": grab_data('//*[@id="mainColumn"]/section[4]/div/div/ul/li[7]/div[2]/text()'),
+            "runtime": grab_data('//*[@id="mainColumn"]/section[4]/div/div/ul/li[8]/div[2]/time/text()'),
+        };
