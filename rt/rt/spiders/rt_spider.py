@@ -41,14 +41,14 @@ class RTSpider(Spider):
                   "https://www.rottentomatoes.com/top/bestofrt/top_100_western_movies/"]
 
     def parse(self, response):
-        genres = response.xpath('//*[@id="mainColumn"]/section[4]/div/h2')
+        top100 = response.xpath('/html/body/div[4]/div[2]/div[1]/section/div/table//@href')
         genre_movies = set()
-        print("you are in parse '{}'".format(genres))
-        time.sleep(100)
-        for item in genres:
+        print("selectors '{}'".format(top100))
+        for selector in top100:
+            url = 'www.rottentomatoes.com' + selector.extract()
             try:
-           ## collect item and yield item
-                print(item)
+           ## collect selector and yield selector
+                test = get_movieinfo(url)
             except Error as e:
                 print("Error in URL {}".format(e))
 
@@ -67,18 +67,21 @@ class RTSpider(Spider):
 
     def get_movieinfo(self, url):
         response = None
-        genre_movies = set()
 
         criticscore = response.xpath(
             '//*[@id="tomato_meter_link"]/span[2]').extract()
+        print("criticscore: {}".format(criticscore))
         audiencescore = response.xpath(
             '//*[@id="topSection"]/div[2]/div[1]/section/section/div[2]/h2/a/span[2]').extract()
+        print("audiencescore: {}".format(audiencescore))
         rating = response.xpath(
             '//*[@id="mainColumn"]/section[4]/div/div/ul/li[1]/div[2]').extract()
+        print("rating: {}".format(rating))
         boxoffice = response.xpath(
             '//*[@id="mainColumn"]/section[4]/div/div/ul/li[7]/div[2]').extract()
+        print("boxoffice: {}".format(boxoffice))
         runtime = response.xpath(
             '//*[@id="mainColumn"]/section[4]/div/div/ul/li[8]/div[2]/time').extract()
+        print("runtime: {}".format(runtime))
 
-        m = MovieInfo(criticscore, audiencescore, rating, boxoffice, runtime)
-        genre_movies.add(m)
+        return MovieInfo(criticscore, audiencescore, rating, boxoffice, runtime)
