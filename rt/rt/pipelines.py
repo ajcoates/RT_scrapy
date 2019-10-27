@@ -21,12 +21,14 @@ class RtPipeline(object):
 
         try:
             os.remove(self.filename)
+            print("Cleared existing csv file.")
         except OSError:
-            pass
-
+            print("{} does not exist, creating.".format(self.filename))
 
         writer = csv.writer(open(self.filename, 'a+'))
         writer.writerow(["title", "criticscore", "audiencescore", "rating", "boxoffice", "runtime"])
+
+        print("Wrote column names to csv.")
 
     def open_spider(self, spider):
         self.csvfile = open(self.filename, 'wb')

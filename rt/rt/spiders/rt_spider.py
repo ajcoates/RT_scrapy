@@ -32,15 +32,17 @@ class RTSpider(Spider):
                   "https://www.rottentomatoes.com/top/bestofrt/top_100_television_movies/",
                   "https://www.rottentomatoes.com/top/bestofrt/top_100_western_movies/"]
 
+    soft_failures = 0
+    hard_failures = 0
+
     def parse(self, response):
         top100 = response.xpath('/html/body/div[4]/div[2]/div[1]/section/div/table//@href')
         for selector in top100:
             url = 'https://www.rottentomatoes.com' + selector.extract()
             try:
-
                 yield self.get_movieinfo(url)
-            except Exception as e:
-                print("Error in '{}' {}".format(url, e))
+            except IndexError as ie:
+                print("Ignoring error in '{}': '{}'.".format(url, ie))
 
     @staticmethod
     def _get_content(link):
@@ -56,18 +58,37 @@ class RTSpider(Spider):
         return content
 
     def get_movieinfo(self, url):
-        print("getting movie info for '{}'".format(url))
+        print("Getting movie info for '{}'".format(url))
 
         content = RTSpider._get_content(url)
 
-        def grab_data(my_xpath):
-            return Selector(text=content).xpath(my_xpath).extract()[0].strip()
+        def make_xpath(sibling_value):
+            return '//div[@class="meta-label subtle" and text()="{}: "]/following-sibling::div/text()'.format(sibling_value)
+
+        def grab_data(name, my_xpath, force=False):
+            def print_failures(is_hard):
+                print("\n{} fail to xpath '{}'!! '{}'. \nsoft fails: {}, hard_fails: {}\n".format(
+                    "\tHARD" if is_hard else "Soft", name, my_xpath, self.soft_failures, self.hard_failures))
+
+            try:
+                return Selector(text=content).xpath(my_xpath).extract()[0].strip()
+            except Exception as e:
+                if force:
+                    self.soft_failures += 1
+                    print_failures(False)
+                    return None
+
+                self.hard_failures += 1
+                print_failures(True)
+                raise e
 
         return {
-            "title": grab_data('//h1[@class="mop-ratings-wrap__title mop-ratings-wrap__title--top"]/text()'),
-            "criticscore": grab_data('//*[@id="tomato_meter_link"]/span[2]/text()'),
-            "audiencescore": grab_data('//*[@id="topSection"]/div[2]/div[1]/section/section/div[2]/h2/a/span[2]/text()'),
-            "rating": grab_data('//*[@id="mainColumn"]/section[4]/div/div/ul/li[1]/div[2]/text()'),
-            "boxoffice": grab_data('//*[@id="mainColumn"]/section[4]/div/div/ul/li[7]/div[2]/text()'),
-            "runtime": grab_data('//*[@id="mainColumn"]/section[4]/div/div/ul/li[8]/div[2]/time/text()'),
+            "title": grab_data("title", '//h1[@class="mop-ratings-wrap__title mop-ratings-wrap__title--top"]/text()'),
+            "criticscore": grab_data("criticscore", '//*[@id="tomato_meter_link"]/span[2]/text()'),
+            "criticcount": grab_data("critic count", '//small[@class="mop-ratings-wrap__text--small"]/text()'),
+            "audiencescore": grab_data("audiencescore", '//*[@id="topSection"]/div[2]/div[1]/section/section/div[2]/h2/a/span[2]/text()'),
+            "audiencevotercount": grab_data("audience score count", '//strong[@class="mop-ratings-wrap__text--small"]/text()'),
+            "rating": grab_data("rating", make_xpath("Rating")),
+            "boxoffice": grab_data("boxoffice", make_xpath("Box Office"), True),
+            "runtime": grab_data("runtime", make_xpath("Runtime")),
         }
