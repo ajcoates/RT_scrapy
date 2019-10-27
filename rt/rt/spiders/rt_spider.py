@@ -34,14 +34,13 @@ class RTSpider(Spider):
 
     def parse(self, response):
         top100 = response.xpath('/html/body/div[4]/div[2]/div[1]/section/div/table//@href')
-        genre_movies = set()
         for selector in top100:
             url = 'https://www.rottentomatoes.com' + selector.extract()
             try:
-           ## collect selector and yield selector
+
                 yield self.get_movieinfo(url)
             except Exception as e:
-                print("Error in URL {}".format(e))
+                print("Error in '{}' {}".format(url, e))
 
     @staticmethod
     def _get_content(link):
@@ -59,16 +58,16 @@ class RTSpider(Spider):
     def get_movieinfo(self, url):
         print("getting movie info for '{}'".format(url))
 
-        content = RTSpider._get_content(url);
+        content = RTSpider._get_content(url)
 
         def grab_data(my_xpath):
             return Selector(text=content).xpath(my_xpath).extract()[0].strip()
 
         return {
-            "title": grab_data('//h1[@class="mop-ratings-wrap__title mop-ratings-wrap__title--top"]/text()')
+            "title": grab_data('//h1[@class="mop-ratings-wrap__title mop-ratings-wrap__title--top"]/text()'),
             "criticscore": grab_data('//*[@id="tomato_meter_link"]/span[2]/text()'),
             "audiencescore": grab_data('//*[@id="topSection"]/div[2]/div[1]/section/section/div[2]/h2/a/span[2]/text()'),
             "rating": grab_data('//*[@id="mainColumn"]/section[4]/div/div/ul/li[1]/div[2]/text()'),
             "boxoffice": grab_data('//*[@id="mainColumn"]/section[4]/div/div/ul/li[7]/div[2]/text()'),
             "runtime": grab_data('//*[@id="mainColumn"]/section[4]/div/div/ul/li[8]/div[2]/time/text()'),
-        };
+        }
