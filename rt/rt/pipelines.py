@@ -18,7 +18,9 @@ class RtPipeline(object):
     def __init__(self):
         self.filename = 'rt_spider.csv'
         print(colored("Adding column names to csv", "red"))
+        self.items_processed = 0
 
+    def open_spider(self, spider):
         try:
             os.remove(self.filename)
             print("Cleared existing csv file.")
@@ -26,11 +28,10 @@ class RtPipeline(object):
             print("{} does not exist, creating.".format(self.filename))
 
         writer = csv.writer(open(self.filename, 'a+'))
-        writer.writerow(["title", "criticscore", "audiencescore", "rating", "boxoffice", "runtime"])
+        writer.writerow(["title", "criticscore", "criticcount", "audiencescore", "audiencevotercount", "rating", "boxoffice", "runtime"])
 
         print("Wrote column names to csv.")
 
-    def open_spider(self, spider):
         self.csvfile = open(self.filename, 'wb')
         self.exporter = CsvItemExporter(self.csvfile)
         self.exporter.start_exporting()
@@ -48,16 +49,20 @@ class RtPipeline(object):
         new_row = [
             item["title"],
             item["criticscore"],
+            item["criticcount"],
             item["audiencescore"],
+            item["audiencevotercount"],
             item["rating"],
             item["boxoffice"],
             item["runtime"],
         ]
 
 
-        print(colored("Adding new row to CSV: '{}'".format(new_row), "red"))
 
         writer = csv.writer(open(self.filename, "a+"))
         writer.writerow(new_row)
-       
+
+        self.items_processed += 1
+
+        print(colored("Added row {}: '{}'".format(self.items_processed, new_row), "red"))
         return item
